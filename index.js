@@ -1,4 +1,5 @@
 const fastify = require("fastify")({ logger: true });
+const searchHandler = require("./searchHandler");
 
 const getOptions = {
   schema: {
@@ -9,9 +10,17 @@ const getOptions = {
       200: {
         type: "object",
         properties: {
-          author: { type: "string" },
-          name: { type: "string" },
-          logoSrc: { type: "string" },
+          results: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                author: { type: "string" },
+                name: { type: "string" },
+                logoSrc: { type: "string" },
+              },
+            },
+          },
         },
       },
     },
@@ -19,29 +28,11 @@ const getOptions = {
 };
 
 fastify.get("/search", getOptions, async (request, reply) => {
-  const ret = await searchHandler(request.query.search);
-  const response = ret.results[0];
+  const results = await searchHandler(request.query.search);
+
   reply.status(200);
-
-  reply.send({
-    author: response.artistName,
-    name: response.trackName,
-    logoSrc: response.artworkUrl600,
-  });
-
-  console.log(ret);
-  console.log(response.artistName);
-  console.log(response.trackName);
-  console.log(response.artworkUrl600);
+  reply.send({ results });
 });
-
-async function searchHandler(searchQeury) {
-  const resp = await fetch(
-    `https://itunes.apple.com/search?term=${searchQeury}&entity=podcast&limit=1` // dont forget to modify limit when finalizing
-  );
-
-  return await resp.json();
-}
 
 fastify.listen({ port: 3000 }, function (err, address) {
   if (err) {
