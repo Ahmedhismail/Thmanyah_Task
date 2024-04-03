@@ -16,19 +16,22 @@ const getOptions = {
   },
 };
 
-fastify.get("/search", getOptions, (request, reply) => {
+fastify.get("/search", getOptions, async (request, reply) => {
   reply.status(200);
   reply.send({ hello: "world" });
-  console.log(`\n ${request.query.RSP} \n`);
-  //   console.log(reply);
+  // console.log(`\n ${request.query.RSP} \n`);
+
+  console.log(
+    `\n ${JSON.stringify(await searchHandler(request.query.RSP), null, 2)} \n`
+  );
 });
 
-// async function searchHandler() {
-//   const resp = await fetch(
-//     "https://itunes.apple.com/search?term=Joe+Rogan&limit=2"
-//   );
-//   return await resp.json();
-// }
+async function searchHandler(searchQeury) {
+  const resp = await fetch(
+    `https://itunes.apple.com/search?term=${searchQeury}&limit=2` // dont forget to modify limit when finalizing
+  );
+  return await resp.json();
+}
 
 fastify.listen({ port: 3000 }, function (err, address) {
   if (err) {
