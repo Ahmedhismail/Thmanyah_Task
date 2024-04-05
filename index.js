@@ -3,10 +3,18 @@ const searchHandler = require("./searchHandler");
 
 const getOptions = {
   schema: {
+    // schema validation
     querystring: {
-      search: { type: "string" },
+      // checking that the query string matches what we want
+      type: "object",
+      properties: {
+        search: { type: "string" },
+      },
+      required: ["search"],
+      additionalProperties: false,
     },
     response: {
+      // checking that our response has the codes and schema formatted in the way we want it
       200: {
         type: "object",
         properties: {
@@ -15,8 +23,8 @@ const getOptions = {
             items: {
               type: "object",
               properties: {
-                author: { type: "string" },
                 name: { type: "string" },
+                author: { type: "string" },
                 logoSrc: { type: "string" },
               },
             },
@@ -28,10 +36,15 @@ const getOptions = {
 };
 
 fastify.get("/search", getOptions, async (request, reply) => {
-  const results = await searchHandler(request.query.search);
-
-  reply.status(200);
-  reply.send({ results });
+  try {
+    const results = await searchHandler(request.query.search);
+    reply.send({ results });
+  } catch (error) {
+    if (error.message == "Failed to fetch data from iTunes Search API") {
+      reply.status(502).send(error); // expexted error if search handler does not work for some reason we return 502
+    }
+    reply.status(500); // incase sending failed for some reason we return 500
+  }
 });
 
 fastify.listen({ port: 3000 }, function (err, address) {
