@@ -1,3 +1,5 @@
+const fetch = require("node-fetch");
+
 async function searchHandler(searchQeury) {
   try {
     const rawResponse = await fetch(
