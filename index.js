@@ -38,7 +38,7 @@ function init() {
     },
   };
 
-  app.get("/Thmanyah", getOptions, async (request, reply) => {
+  app.get("/search", getOptions, async (request, reply) => {
     try {
       const results = await searchHandler(request.query.search);
       reply.send({ results });
