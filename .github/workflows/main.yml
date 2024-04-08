@@ -9,6 +9,10 @@ jobs:
   deploy_lambda:
     runs-on: ubuntu-latest
     steps:
+      - name: move
+        run: |
+          cd backend
+
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -26,6 +30,5 @@ jobs:
           npm ci
       - name: deploy
         run: |
-          cd backend
           zip -r Thmanyah.zip index.js lambda.js searchHandler.js node_modules/
           aws lambda update-function-code --function-name=Thmanyah --zip-file=fileb://Thmanyah.zip
