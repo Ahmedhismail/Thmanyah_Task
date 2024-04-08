@@ -26,5 +26,6 @@ jobs:
           npm ci
       - name: deploy
         run: |
+          cd backend
           zip -r Thmanyah.zip index.js lambda.js searchHandler.js node_modules/
           aws lambda update-function-code --function-name=Thmanyah --zip-file=fileb://Thmanyah.zip
