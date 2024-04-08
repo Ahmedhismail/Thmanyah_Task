@@ -3,6 +3,7 @@ const searchHandler = require("./searchHandler");
 
 function init() {
   const app = fastify({ logger: true });
+  // make fastify instance
 
   const getOptions = {
     schema: {
@@ -39,9 +40,10 @@ function init() {
   };
 
   app.get("/search", getOptions, async (request, reply) => {
+    // make our route
     try {
-      const results = await searchHandler(request.query.search);
-      reply.send({ results });
+      const results = await searchHandler(request.query.search); // call search handler using request query string
+      reply.send({ results }); // send back result object
     } catch (error) {
       if (error.message == "Failed to fetch data from iTunes Search API") {
         reply.status(502).send(error); // expexted error if search handler does not work for some reason we return 502
@@ -54,7 +56,7 @@ function init() {
 }
 
 if (require.main === module) {
-  // called directly i.e. "node app"
+  // if our app was ran directly using "node" command (for local testing)
   init().listen({ port: 3000 }, function (err, address) {
     if (err) {
       fastify.log.error(err);
@@ -63,6 +65,6 @@ if (require.main === module) {
     console.log("now listening at http://localhost:3000/");
   });
 } else {
-  // executed on aws lambda
+  // else it was executed on aws lambda
   module.exports = init;
 }
