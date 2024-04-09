@@ -6,14 +6,9 @@ function init() {
   const app = fastify({ logger: true });
   // make fastify instance
 
-  try {
-    app.register(cors, {
-      origin: "*",
-    });
-  } catch (error) {
-    app.log.error(error);
-    throw error; // rethrow the error to be handled by the caller
-  }
+  app.register(cors, {
+    origin: "*",
+  });
 
   const getOptions = {
     schema: {
