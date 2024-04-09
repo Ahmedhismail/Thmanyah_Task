@@ -24,12 +24,27 @@ async function searchHandler(searchQuery) {
 
     // Save each item to DynamoDB
     for (const item of returnResponse) {
-      await dynamoDBClient.send(
-        new PutItemCommand({
-          TableName: "thmanyahTable",
-          Item: item,
-        })
-      );
+      const input = {
+        Item: {
+          podcastID: {
+            S: item.id,
+          },
+          author: {
+            S: item.author,
+          },
+          name: {
+            S: item.name,
+          },
+          logoSrc: {
+            S: item.logoSrc,
+          },
+          link: {
+            S: item.link,
+          },
+        },
+        TableName: "thmanyahTable",
+      };
+      await dynamoDBClient.send(new PutItemCommand(input));
     }
 
     return returnResponse;
