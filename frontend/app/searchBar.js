@@ -49,7 +49,6 @@ export default function SearchBar() {
 }
 
 async function SearchHandler(searchTerm) {
-  console.log("Search submitted with term:", searchTerm);
   const response = await fetch(
     // `http://localhost:5000/search?search=${encodeURIComponent(searchTerm)}`
     `https://h8m6si5pb3.execute-api.us-east-2.amazonaws.com/dev/search?search=${encodeURIComponent(
