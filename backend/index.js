@@ -1,20 +1,22 @@
 const fastify = require("fastify");
 const searchHandler = require("./searchHandler");
 const cors = require("@fastify/cors");
+const fastifydynamodb = require("fastify-dynamodb");
 
 function init() {
   const app = fastify({ logger: true });
   // make fastify instance
 
-  try {
-    // change this
-    app.register(cors, {
-      origin: "*",
-    });
-  } catch (error) {
-    app.log.error(error);
-    throw error; // rethrow the error to be handled by the caller
-  }
+  // register cors permissions
+  app.register(cors, {
+    origin: "*",
+  });
+
+  app.register(fastifydynamodb, {
+    region: "us-east-2",
+  });
+
+  // register
 
   const getOptions = {
     schema: {
@@ -55,7 +57,8 @@ function init() {
   app.get("/search", getOptions, async (request, reply) => {
     // make our route
     try {
-      const results = await searchHandler(request.query.search); // call search handler using request query string
+      const results = await searchHandler(request.query.search, app); // call search handler using request query string
+
       reply.send({ results }); // send back result object
     } catch (error) {
       if (error.message == "Failed to fetch data from iTunes Search API") {
