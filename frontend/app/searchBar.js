@@ -30,7 +30,7 @@ export default function SearchBar() {
   return (
     <div className="max-w-xl mx-auto">
       <form onSubmit={handleSubmit}>
-        <div className="mb-8">
+        <div className="mb-4">
           <input
             type="search"
             placeholder="Search for podcasts..."
@@ -39,9 +39,9 @@ export default function SearchBar() {
             onChange={handleInputChange}
           />
         </div>
-        {searchTerm && (
-          <p className="mb-4">Top Podcasts for: {searchTerm} 🎙️!</p>
-        )}
+        <div className="mb-4">
+          {searchTerm && <b>Top Podcasts for: {searchTerm} 🎙️!</b>}
+        </div>
       </form>
       <ContentList content={content} /> {/* Updated to use the content state */}
     </div>
