@@ -40,7 +40,9 @@ function init() {
                 properties: {
                   name: { type: "string" },
                   author: { type: "string" },
+                  id: { type: "integer" },
                   logoSrc: { type: "string" },
+                  link: { type: "string" },
                 },
               },
             },

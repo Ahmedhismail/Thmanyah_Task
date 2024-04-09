@@ -14,7 +14,9 @@ async function searchHandler(searchQuery) {
       const returnItem = {
         author: item.artistName,
         name: item.trackName,
+        id: item.trackId,
         logoSrc: item.artworkUrl600,
+        link: item.collectionViewUrl,
       };
       return returnItem;
     });
