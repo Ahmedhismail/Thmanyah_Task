@@ -1,9 +1,4 @@
 const fetch = require("node-fetch");
-const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
-
-const dynamoDBClient = new DynamoDBClient({
-  region: "us-east-2",
-});
 
 async function searchHandler(searchQuery) {
   try {
@@ -23,29 +18,6 @@ async function searchHandler(searchQuery) {
     }));
 
     // Save each item to DynamoDB
-    for (const item of returnResponse) {
-      const input = {
-        Item: {
-          podcastID: {
-            S: item.id,
-          },
-          author: {
-            S: item.author,
-          },
-          name: {
-            S: item.name,
-          },
-          logoSrc: {
-            S: item.logoSrc,
-          },
-          link: {
-            S: item.link,
-          },
-        },
-        TableName: "thmanyahTable",
-      };
-      await dynamoDBClient.send(new PutItemCommand(input));
-    }
 
     return returnResponse;
   } catch (error) {

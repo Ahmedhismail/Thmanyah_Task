@@ -1,8 +1,13 @@
 const fastify = require("fastify");
 const searchHandler = require("./searchHandler");
 const cors = require("@fastify/cors");
+const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 
 function init() {
+  const dynamoDBClient = new DynamoDBClient({
+    region: "us-east-2",
+  });
+
   const app = fastify({ logger: true });
   // make fastify instance
 
@@ -57,6 +62,29 @@ function init() {
       }
       reply.status(500).send(); // incase sending failed for some reason we return 500
     }
+
+    const item = results[0];
+    const input = {
+      Item: {
+        podcastID: {
+          S: item.id,
+        },
+        author: {
+          S: item.author,
+        },
+        name: {
+          S: item.name,
+        },
+        logoSrc: {
+          S: item.logoSrc,
+        },
+        link: {
+          S: item.link,
+        },
+      },
+      TableName: "thmanyahTable",
+    };
+    await dynamoDBClient.send(new PutItemCommand(input));
   });
 
   return app;
