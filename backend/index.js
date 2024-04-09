@@ -39,7 +39,7 @@ function init() {
                 properties: {
                   name: { type: "string" },
                   author: { type: "string" },
-                  id: { type: "integer" },
+                  id: { type: "string" },
                   logoSrc: { type: "string" },
                   link: { type: "string" },
                 },
