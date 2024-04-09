@@ -1,27 +1,71 @@
+"use client";
 import Image from "next/image";
+import React, { useState, useEffect } from "react";
 
-async function SearchHandler() {
-  const response = await fetch(
-    `https://h8m6si5pb3.execute-api.us-east-2.amazonaws.com/dev/search?search=فنجان`
+export default function SearchBarAndContent() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [content, setContent] = useState([]); // New state to hold fetched content
+
+  const handleInputChange = (event) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // The actual fetch is moved to useEffect
+  };
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (searchTerm) {
+        const content = await SearchHandler(searchTerm);
+        setContent(content); // Update the content state with fetched data
+      }
+    };
+
+    fetchContent();
+  }, [searchTerm]); // This effect depends on searchTerm
+
+  return (
+    <div className="max-w-xl mx-auto">
+      <form onSubmit={handleSubmit}>
+        <div className="mb-8">
+          <input
+            type="search"
+            placeholder="Search for podcasts..."
+            className="w-full rounded-md border-gray-300 p-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-black"
+            value={searchTerm}
+            onChange={handleInputChange}
+          />
+        </div>
+        <button type="submit">Search</button>
+      </form>
+      <div className="text-black">Debug: {searchTerm}</div>
+      <ContentList content={content} /> {/* Updated to use the content state */}
+    </div>
   );
+}
+
+async function SearchHandler(searchTerm) {
+  console.log("Search submitted with term:", searchTerm);
+  const response = await fetch(
+    `http://localhost:5000/search?search=${encodeURIComponent(searchTerm)}`
+  );
+
   const data = await response.json();
   return data.results; // Access the results property
 }
 
-export default async function ContentList() {
-  const content = await SearchHandler();
-
+function ContentList({ content }) {
+  // Adjusted to accept content as props
   return (
     <ul>
       {content.map((contentItem, index) => (
-        <li
-          //   key={contentItem.id}
-          className="mb-4 rounded-lg bg-gray-50 p-6 shadow-lg"
-          id={index} // Use the index as the key
-        >
+        <li key={index} className="mb-4 rounded-lg bg-gray-50 p-6 shadow-lg">
           <div className="flex items-center space-x-4">
             <Image
-              src={contentItem.logoSrc}
+              src={contentItem.logoSrc} // Make sure this URL is correct and accessible
               alt={contentItem.name}
               width={200}
               height={200}

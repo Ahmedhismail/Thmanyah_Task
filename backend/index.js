@@ -1,9 +1,20 @@
 const fastify = require("fastify");
 const searchHandler = require("./searchHandler");
+const cors = require("@fastify/cors");
 
 function init() {
   const app = fastify({ logger: true });
   // make fastify instance
+
+  try {
+    // change this
+    app.register(cors, {
+      origin: "*",
+    });
+  } catch (error) {
+    app.log.error(error);
+    throw error; // rethrow the error to be handled by the caller
+  }
 
   const getOptions = {
     schema: {
@@ -48,7 +59,7 @@ function init() {
       if (error.message == "Failed to fetch data from iTunes Search API") {
         reply.status(502).send(error); // expexted error if search handler does not work for some reason we return 502
       }
-      reply.status(500); // incase sending failed for some reason we return 500
+      reply.status(500).send(); // incase sending failed for some reason we return 500
     }
   });
 
@@ -57,12 +68,12 @@ function init() {
 
 if (require.main === module) {
   // if our app was ran directly using "node" command (for local testing)
-  init().listen({ port: 3000 }, function (err, address) {
+  init().listen({ port: 5000 }, function (err, address) {
     if (err) {
-      fastify.log.error(err);
+      console.log(err);
       process.exit(1);
     }
-    console.log("now listening at http://localhost:3000/");
+    console.log("now listening at http://localhost:5000/");
   });
 } else {
   // else it was executed on aws lambda
