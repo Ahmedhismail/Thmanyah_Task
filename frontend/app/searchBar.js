@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import ContentList from "./searchItunes";
+import ContentList from "./Contentlist";
 
 export default function SearchBar() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +39,9 @@ export default function SearchBar() {
             onChange={handleInputChange}
           />
         </div>
-        <p className="mb-4">Top podcasts for {searchTerm}</p>
+        {searchTerm && (
+          <p className="mb-4">Top Podcasts for: {searchTerm} 🎙️!</p>
+        )}
       </form>
       <ContentList content={content} /> {/* Updated to use the content state */}
     </div>

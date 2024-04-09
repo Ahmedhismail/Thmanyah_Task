@@ -4,7 +4,7 @@ export default function ContentList({ content }) {
   return (
     <ul>
       {content.map((contentItem, index) => (
-        <li key={index} className="mb-4 rounded-lg bg-gray-50 p-6 shadow-lg">
+        <li key={index} className="mb-4 rounded-lg bg-white p-6 shadow-lg ">
           <div className="flex items-center space-x-4">
             <Image
               src={contentItem.logoSrc} // Make sure this URL is correct and accessible
@@ -14,7 +14,7 @@ export default function ContentList({ content }) {
               className="rounded-md"
             />
             <div>
-              <p className="block text-lg font-medium text-indigo-600">
+              <p className="block text-lg font-medium text-indigo-800">
                 {contentItem.name}
               </p>
               <p className="mt-1 text-sm text-gray-600">{contentItem.author}</p>
