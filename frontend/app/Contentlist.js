@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function ContentList({ content }) {
   return (
     <ul>
@@ -10,7 +8,7 @@ export default function ContentList({ content }) {
             className="rounded-lg p-4 mb-6 bg-white shadow-lg transition-transform transform duration-500 hover:scale-105"
           >
             <div className="flex items-center space-x-4">
-              <Image
+              <img
                 src={contentItem.logoSrc}
                 alt={contentItem.name}
                 width={200}
